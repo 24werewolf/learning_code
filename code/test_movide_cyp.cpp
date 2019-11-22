@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 class Movie{
 
 public:
@@ -31,7 +30,7 @@ public:
 
   int getPriceCode();
 
-  int setPriceCode(int arg);
+  void setPriceCode(int arg);
 
   string getMovieName();
 
@@ -47,13 +46,12 @@ public:
 
 //}
 
-
-int Movie::getPriceCode(){
+int  Movie::getPriceCode(){
 
   return _priceCode;
 }
 
-int Movie::setPriceCode(int arg){
+void Movie::setPriceCode(int arg){
     _priceCode = arg;
 
 }
@@ -86,14 +84,6 @@ class Rental{
 };
 
 
-/*
-Rental::Rental(Movie movie, int daysRented){
-
-  _movie = movie;
-  _daysRented = daysRented;
-
-}
-*/
 
 int Rental::getDaysRented(){
 
@@ -108,9 +98,12 @@ Movie Rental::getMovie(){
 
 
 
+
+
 typedef vector<Rental> Vector;  // 为复杂声明一个简单的别名
 
 typedef vector<Rental>::iterator Reniter;  //为复杂声明一个简单的别名
+
 
 
 /*
@@ -139,6 +132,8 @@ public:
 
   string statement();
 
+  double amountFor(Rental each);
+
 
 };
 
@@ -158,20 +153,12 @@ string Customer::getName(){
   return _name;
 }
 
-string Customer::statement(){
 
-  double totalAmount = 0;
-  int frequentRenterPoints = 0;
 
-  Reniter iter;
 
-  char amount[32];
-  string result = string("Rental Record for ") + getName() + string("\n");
+double Customer::amountFor(Rental each){
 
-  for (iter = _rentals.begin(); iter != _rentals.end(); ++ iter){
-
-    double thisAmount = 0;
-    Rental each = *iter;   // （*） 迭代器类型可以使用解引用操作符（dereference  operator ） 来访问迭代器所指向的元素
+  double thisAmount = 0;
 
 
     switch(each.getMovie().getPriceCode()){
@@ -190,8 +177,35 @@ string Customer::statement(){
       if(each.getDaysRented()>3)
         thisAmount += (each.getDaysRented()-3)*1.5;
     break;
+  }
 
-    }
+    return thisAmount;
+
+
+}
+
+
+
+string Customer::statement(){
+
+  double totalAmount = 0;
+  int frequentRenterPoints = 0;
+
+  Reniter iter;
+
+  char amount[32];
+  string result = string("Rental Record for ") + getName() + string("\n");
+
+  for (iter = _rentals.begin(); iter != _rentals.end(); ++ iter){
+
+    
+    double thisAmount = 0;
+    Rental each = *iter;   // （*） 迭代器类型可以使用解引用操作符（dereference  operator ） 来访问迭代器所指向的元素
+
+    //Rental rentalIter;
+
+
+    thisAmount = amountFor(each);
 
 
        // add frequent renter points?
@@ -218,11 +232,8 @@ string Customer::statement(){
   return result;
 
 
-
   //std::cout << "        " << result << std::endl;
 }
-
-
 
 
 
@@ -265,6 +276,5 @@ int main(int argc, char* argv[])
  
  return 0;
 }
-
 
 

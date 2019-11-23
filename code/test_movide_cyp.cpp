@@ -80,6 +80,8 @@ class Rental{
 
     Movie getMovie();
 
+    double getCharge();
+
 
 };
 
@@ -95,6 +97,39 @@ Movie Rental::getMovie(){
   return _movie;
 
 }
+
+
+
+
+
+double Rental::getCharge(){
+
+  double result = 0;
+
+
+    switch(getMovie().getPriceCode()){
+    case Movie::REGULAR:
+      result += 2;
+    if(getDaysRented()>2)
+      result += (getDaysRented()-2)*1.5;
+    break;
+
+    case Movie::NEW_RELEASE:
+        result += getDaysRented()*3;
+    break;
+
+    case Movie::CHILDRENS:
+      result += 1.5;
+      if(getDaysRented()>3)
+        result += (getDaysRented()-3)*1.5;
+    break;
+  }
+
+    return result;
+    
+}
+
+
 
 
 
@@ -180,7 +215,7 @@ double Customer::amountFor(Rental aRental){
   }
 
     return result;
-    
+
 }
 
 
@@ -201,7 +236,9 @@ string Customer::statement(){
     double thisAmount = 0;
     Rental each = *iter;   // （*） 迭代器类型可以使用解引用操作符（dereference  operator ） 来访问迭代器所指向的元素
 
-    thisAmount = amountFor(each);
+    thisAmount = each.getCharge();
+
+    //thisAmount = amountFor(each);
 
 
     // add frequent renter points?

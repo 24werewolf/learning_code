@@ -34,17 +34,11 @@ public:
 
   string getMovieName();
 
+  double getCharge(int daysRented);
 
+  int getFrequentRenterPoints(int daysRented);
 
 };
-
-
-//Movie::Movie(string movieName, int priceCode): _movieName(movieName), _priceCode(priceCode){
-
-   // _movieName = movieName;
-   // _priceCode = priceCode;
-
-//}
 
 int  Movie::getPriceCode(){
 
@@ -61,6 +55,42 @@ string Movie::getMovieName(){
   return _movieName;
 
 }
+
+double Movie::getCharge(int daysRented){
+
+  double result = 0;
+
+
+    switch(getPriceCode()){
+    case Movie::REGULAR:
+      result += 2;
+    if(daysRented>2)
+      result += (daysRented-2)*1.5;
+    break;
+
+    case Movie::NEW_RELEASE:
+        result += daysRented*3;
+    break;
+
+    case Movie::CHILDRENS:
+      result += 1.5;
+      if(daysRented>3)
+        result += (daysRented-3)*1.5;
+    break;
+  }
+
+    return result;
+    
+}
+
+
+int Movie::getFrequentRenterPoints(int daysRented){
+    if ((getPriceCode() == Movie::NEW_RELEASE) &&
+    daysRented > 1) return 2;
+  else
+    return 1;
+}
+
 
 
 
@@ -104,41 +134,14 @@ Movie Rental::getMovie(){
 
 double Rental::getCharge(){
 
-  double result = 0;
-
-
-    switch(getMovie().getPriceCode()){
-    case Movie::REGULAR:
-      result += 2;
-    if(getDaysRented()>2)
-      result += (getDaysRented()-2)*1.5;
-    break;
-
-    case Movie::NEW_RELEASE:
-        result += getDaysRented()*3;
-    break;
-
-    case Movie::CHILDRENS:
-      result += 1.5;
-      if(getDaysRented()>3)
-        result += (getDaysRented()-3)*1.5;
-    break;
-  }
-
-    return result;
+  return _movie.getCharge(_daysRented);
     
 }
 
 
 
 int Rental::getFrequentRenterPoints(){
-
-
-   // add bonus for a two day new release rental
-  if ((getMovie().getPriceCode() == Movie::NEW_RELEASE) &&
-    getDaysRented() > 1) return 2;
-  else
-    return 1;
+  return _movie.getFrequentRenterPoints(_daysRented);
 
 }
 
@@ -243,8 +246,7 @@ string Customer::statement(){
 
   for (iter = _rentals.begin(); iter != _rentals.end(); ++ iter){
 
-    
-    double thisAmount = 0;
+  
     Rental each = *iter;   // （*） 迭代器类型可以使用解引用操作符（dereference  operator ） 来访问迭代器所指向的元素
 
     // add frequent renter points?

@@ -82,6 +82,8 @@ class Rental{
 
     double getCharge();
 
+    int getFrequentRenterPoints();
+
 
 };
 
@@ -97,8 +99,6 @@ Movie Rental::getMovie(){
   return _movie;
 
 }
-
-
 
 
 
@@ -130,6 +130,17 @@ double Rental::getCharge(){
 }
 
 
+
+int Rental::getFrequentRenterPoints(){
+
+
+   // add bonus for a two day new release rental
+  if ((getMovie().getPriceCode() == Movie::NEW_RELEASE) &&
+    getDaysRented() > 1) return 2;
+  else
+    return 1;
+
+}
 
 
 
@@ -237,12 +248,7 @@ string Customer::statement(){
     Rental each = *iter;   // （*） 迭代器类型可以使用解引用操作符（dereference  operator ） 来访问迭代器所指向的元素
 
     // add frequent renter points?
-   frequentRenterPoints ++;
-   // add bonus for a two day new release rental
-   if ((each.getMovie().getPriceCode() == Movie::NEW_RELEASE) &&
-    each.getDaysRented() > 1)
-    frequentRenterPoints ++;
-
+   frequentRenterPoints += each.getFrequentRenterPoints();
    // show figures for this rental?
    snprintf(amount, 32,"%f\n",each.getCharge());
    result += string("\t") + each.getMovie().getMovieName() + string("\t") +

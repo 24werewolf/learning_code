@@ -236,11 +236,6 @@ string Customer::statement(){
     double thisAmount = 0;
     Rental each = *iter;   // （*） 迭代器类型可以使用解引用操作符（dereference  operator ） 来访问迭代器所指向的元素
 
-    thisAmount = each.getCharge();
-
-    //thisAmount = amountFor(each);
-
-
     // add frequent renter points?
    frequentRenterPoints ++;
    // add bonus for a two day new release rental
@@ -249,10 +244,10 @@ string Customer::statement(){
     frequentRenterPoints ++;
 
    // show figures for this rental?
-   snprintf(amount, 32,"%f\n",thisAmount);
+   snprintf(amount, 32,"%f\n",each.getCharge());
    result += string("\t") + each.getMovie().getMovieName() + string("\t") +
     string(amount);
-   totalAmount += thisAmount;
+   totalAmount += each.getCharge();
 
   }
 

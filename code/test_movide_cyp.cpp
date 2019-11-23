@@ -156,32 +156,31 @@ string Customer::getName(){
 
 
 
-double Customer::amountFor(Rental each){
+double Customer::amountFor(Rental aRental){
 
-  double thisAmount = 0;
+  double result = 0;
 
 
-    switch(each.getMovie().getPriceCode()){
+    switch(aRental.getMovie().getPriceCode()){
     case Movie::REGULAR:
-      thisAmount += 2;
-    if(each.getDaysRented()>2)
-      thisAmount += (each.getDaysRented()-2)*1.5;
+      result += 2;
+    if(aRental.getDaysRented()>2)
+      result += (aRental.getDaysRented()-2)*1.5;
     break;
 
     case Movie::NEW_RELEASE:
-        thisAmount += each.getDaysRented()*3;
+        result += aRental.getDaysRented()*3;
     break;
 
     case Movie::CHILDRENS:
-      thisAmount += 1.5;
-      if(each.getDaysRented()>3)
-        thisAmount += (each.getDaysRented()-3)*1.5;
+      result += 1.5;
+      if(aRental.getDaysRented()>3)
+        result += (aRental.getDaysRented()-3)*1.5;
     break;
   }
 
-    return thisAmount;
-
-
+    return result;
+    
 }
 
 
@@ -202,13 +201,10 @@ string Customer::statement(){
     double thisAmount = 0;
     Rental each = *iter;   // （*） 迭代器类型可以使用解引用操作符（dereference  operator ） 来访问迭代器所指向的元素
 
-    //Rental rentalIter;
-
-
     thisAmount = amountFor(each);
 
 
-       // add frequent renter points?
+    // add frequent renter points?
    frequentRenterPoints ++;
    // add bonus for a two day new release rental
    if ((each.getMovie().getPriceCode() == Movie::NEW_RELEASE) &&
@@ -230,9 +226,6 @@ string Customer::statement(){
   result += string("You earned ") + string(amount) +
   string(" frequent renter points");
   return result;
-
-
-  //std::cout << "        " << result << std::endl;
 }
 
 
